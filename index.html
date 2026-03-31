@@ -1,1 +1,434 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagrams</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;700;900&display=swap');
 
+        :root {
+            --bg: #050505;
+            --text: #ffffff;
+            --accent: #555555;
+        }
+
+        body.light-mode {
+            --bg: #f5f5f7;
+            --text: #000000;
+            --accent: #d1d1d6;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.7s ease, color 0.7s ease;
+            overflow-x: hidden;
+        }
+
+        /* Noise Overlay */
+        .noise {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.04;
+            background-image: url('https://grainy-gradients.vercel.app/noise.svg');
+        }
+
+        /* Typography Gradient */
+        .hero-title {
+            font-size: clamp(3rem, 12vw, 10rem);
+            line-height: 0.85;
+            text-transform: uppercase;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+        }
+
+        .gradient-text {
+            background: linear-gradient(to bottom, var(--text) 20%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Timeline Styles */
+        .timeline-container {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .year-block {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 2rem;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .year-label {
+            font-weight: 900;
+            font-size: 1.5rem;
+            opacity: 0.3;
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .event-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .event-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 1.5rem;
+            border-radius: 1.5rem;
+            transition: all 0.4s ease;
+        }
+
+        .light-mode .event-card {
+            background: rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        /* Glassmorphism */
+        .glass {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .aura {
+            position: fixed;
+            width: 60vw;
+            height: 60vw;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: -1;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="dark-mode">
+
+    <div class="noise"></div>
+
+    <!-- Hintergrund Auren -->
+    <div class="aura bg-purple-600 top-[-20%] left-[-10%] animate-pulse"></div>
+    <div class="aura bg-blue-600 bottom-[-20%] right-[-10%] animate-pulse" style="animation-delay: 2s;"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-500 py-8 px-8 flex justify-between items-center">
+        <div class="text-sm font-black tracking-[0.3em] uppercase italic">Leonards Instagram Acc</div>
+        <div class="flex gap-6 items-center">
+            <button id="theme-toggle" class="w-10 h-10 rounded-full border border-current/10 flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                <i class="fas fa-sun text-xs"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="min-h-screen flex flex-col justify-center items-center px-6 pt-20">
+        <div class="max-w-6xl mx-auto text-center">
+            <span class="inline-block mb-8 px-4 py-1 rounded-full border border-current/10 text-[10px] uppercase tracking-[0.4em] font-bold">Made and Coded by Leonard</span>
+            <h1 class="hero-title mb-10">
+                <span>Leonards</span><br>
+                <span class="gradient-text">Accounts</span>
+            </h1>
+            <p class="text-neutral-500 text-lg md:text-xl max-w-xl mx-auto font-light leading-relaxed reveal">
+                Eine Sammlung meiner visuellen Identitäten und digitalen Welten über verschiedene Zeiträume hinweg.
+            </p>
+        </div>
+    </section>
+
+    <!-- Accounts Grid -->
+    <section id="accounts" class="py-32 px-8 max-w-7xl mx-auto">
+        <div class="flex items-center gap-6 mb-20 reveal">
+            <h2 class="text-3xl font-black uppercase tracking-tighter">Aktive Kanäle</h2>
+            <div class="h-[1px] flex-grow bg-current/10"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <!-- Account 1 -->
+            <div class="group relative h-[600px] rounded-[3rem] overflow-hidden border border-current/5 glass transition-all duration-700 reveal">
+                <img src="https://ik.imagekit.io/p82itzpfz/IMG_20251226_004344_165%20(2).webp" alt="Account für Menschen die ich kenne" class="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 scale-110 group-hover:scale-100">
+                <div class="absolute inset-0 bg-black/60 group-hover:bg-black/20 transition-all duration-700"></div>
+                <div class="absolute inset-0 p-12 flex flex-col justify-between text-white">
+                    <div class="flex justify-between items-start">
+                        <span class="text-[10px] font-bold uppercase tracking-widest px-3 py-1 bg-white/10 rounded-lg backdrop-blur-md">Account für Menschen die ich kenne</span>
+                        <i class="fab fa-instagram text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-4xl font-black mb-4 uppercase tracking-tighter">@leonardkram</h3>
+                        <p class="opacity-70 mb-8 max-w-xs text-sm">Jeder den ich kenne ist hier dabei.</p>
+                        <a href="https://instagram.com/leonardkram" class="inline-flex items-center gap-3 bg-white text-black px-8 py-4 rounded-full font-black text-[10px] uppercase tracking-widest hover:bg-neutral-200 transition-all">
+                            Visit Profile <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account 2 -->
+            <div class="group relative h-[600px] rounded-[3rem] overflow-hidden border border-current/5 glass transition-all duration-700 reveal">
+                <img src="https://ik.imagekit.io/p82itzpfz/Screenshot_20251020_194548_Instagram.png" alt="Urban Planning" class="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 scale-110 group-hover:scale-100">
+                <div class="absolute inset-0 bg-black/60 group-hover:bg-black/20 transition-all duration-700"></div>
+                <div class="absolute inset-0 p-12 flex flex-col justify-between text-white">
+                    <div class="flex justify-between items-start">
+                        <span class="text-[10px] font-bold uppercase tracking-widest px-3 py-1 bg-white/10 rounded-lg backdrop-blur-md">Öffentlich</span>
+                        <i class="fab fa-instagram text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-4xl font-black mb-4 uppercase tracking-tighter">@leonardbuturban</h3>
+                        <p class="opacity-70 mb-8 max-w-xs text-sm">Ein wenig labern über Stadtplanung.</p>
+                        <a href="https://instagram.com/leonardbuturban" class="inline-flex items-center gap-3 bg-white text-black px-8 py-4 rounded-full font-black text-[10px] uppercase tracking-widest hover:bg-neutral-200 transition-all">
+                            Lets go<i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+             
+            <!-- Account 2 -->
+            <div class="group relative h-[600px] rounded-[3rem] overflow-hidden border border-current/5 glass transition-all duration-700 reveal">
+                <img src="https://ik.imagekit.io/p82itzpfz/20250426_173633.jpg" alt="Photography" class="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 scale-110 group-hover:scale-100">
+                <div class="absolute inset-0 bg-black/60 group-hover:bg-black/20 transition-all duration-700"></div>
+                <div class="absolute inset-0 p-12 flex flex-col justify-between text-white">
+                    <div class="flex justify-between items-start">
+                        <span class="text-[10px] font-bold uppercase tracking-widest px-3 py-1 bg-white/10 rounded-lg backdrop-blur-md">Privat Acc</span>
+                        <i class="fab fa-instagram text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-4xl font-black mb-4 uppercase tracking-tighter">@leonards_ecke</h3>
+                        <p class="opacity-70 mb-8 max-w-xs text-sm">Hier sind nur die Homies drinnen. Sonst niemand.</p>
+                        <a href="https://instagram.com/leonards_ecke" class="inline-flex items-center gap-3 bg-white text-black px-8 py-4 rounded-full font-black text-[10px] uppercase tracking-widest hover:bg-neutral-200 transition-all">
+                            Komm rein diggi <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+             
+              <!-- Account 333 -->
+              <div class="group relative h-[600px] rounded-[3rem] overflow-hidden border border-current/5 glass transition-all duration-700 reveal">
+                <img src="https://ik.imagekit.io/p82itzpfz/leonards%20Social%20Medie%20Profil%20-%20Kopie.jpg" alt="Account für Menschen die ich kenne" class="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 scale-110 group-hover:scale-100">
+                <div class="absolute inset-0 bg-black/60 group-hover:bg-black/20 transition-all duration-700"></div>
+                <div class="absolute inset-0 p-12 flex flex-col justify-between text-white">
+                    <div class="flex justify-between items-start">
+                        <span class="text-[10px] font-bold uppercase tracking-widest px-3 py-1 bg-white/10 rounded-lg backdrop-blur-md">Alter</span>
+                        <i class="fab fa-instagram text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-4xl font-black mb-4 uppercase tracking-tighter">@onleonardokr</h3>
+                        <p class="opacity-70 mb-8 max-w-xs text-sm">Öffentlich</p>
+                        <a href="https://instagram.com/onleonardokr" class="inline-flex items-center gap-3 bg-white text-black px-8 py-4 rounded-full font-black text-[10px] uppercase tracking-widest hover:bg-neutral-200 transition-all">
+                            Visit Profile <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- JOOOO DIE Timeline Section -->
+    <section class="py-32 px-8 max-w-6xl mx-auto overflow-hidden">
+        <div class="text-center mb-32 reveal">
+            <h2 class="text-5xl font-black uppercase tracking-tighter mb-4">Die Reise</h2>
+            <p class="text-xs uppercase tracking-[0.5em] opacity-40 font-bold">Timeline & Multi-Events</p>
+        </div>
+
+        <div class="timeline-container">
+         <!-- Year 2025 -->
+            <div class="year-block reveal">
+                <div class="year-label">2026</div>
+                <div class="event-grid">
+                    <div class="event-card">
+                        <div class="flex justify-between items-start mb-4">
+                           
+                            <span class="text-[8px] font-bold uppercase tracking-widest opacity-40">Umfunktioniert trotzdem verwahrlost</span>
+                        </div>
+                        <h4 class="font-black text-lg mb-2">@onleonardos</h4>
+                        <p class="text-xs opacity-50">Öffentlicher Account verwahrlost jedoch nun mit der Absicht Online Freunde zu chatten</p>
+                    </div>
+                    <div class="event-card border-red-500/20">
+                        <div class="flex justify-between items-start mb-4">
+                            
+                            <span class="text-[8px] font-bold uppercase tracking-widest text-red-500">Umbenannt</span>
+                        </div>
+                        <h4 class="font-black text-lg mb-2">@leonards_ecke</h4>
+                        <p class="text-xs opacity-50">leonardoskr wurde in leonards_ecke umgenannt.</p>
+                    </div>
+                    <div class="event-card border-green-500/20">
+                        <div class="flex justify-between items-start mb-4">
+                            
+                            <span class="text-[8px] font-bold uppercase tracking-widest text-green-500">Läuft</span>
+                        </div>
+                        <h4 class="font-black text-lg mb-2">@leonardkram</h4>
+                        <p class="text-xs opacity-50">Für jeden den ich persönlich kenne.</p>
+                    </div>
+                    <div class="event-card border-yellow-500/20">
+                        <div class="flex justify-between items-start mb-4">
+                            
+                            <span class="text-[8px] font-bold uppercase tracking-widest text-yellow-500">Erstellt</span>
+                        </div>
+                        <h4 class="font-black text-lg mb-2">@leonardbuturban</h4>
+                        <p class="text-xs opacity-50">Ein öffentlicher Account um über Stadtplanung und Straßenplanung und ÖPNV zu reden.</p>
+                    </div>
+                </div>
+            </div>
+           <!-- Year 2025 -->
+            <div class="year-block reveal">
+                <div class="year-label">2025</div>
+                <div class="event-grid">
+                    <div class="event-card">
+                        <div class="flex justify-between items-start mb-4">
+                           
+                            <span class="text-[8px] font-bold uppercase tracking-widest opacity-40">Verwarhlost</span>
+                        </div>
+                        <h4 class="font-black text-lg mb-2">@onleonardos</h4>
+                        <p class="text-xs opacity-50">Öffentlicher Account verwahrlost</p>
+                    </div>
+                    <div class="event-card border-red-500/20">
+                        <div class="flex justify-between items-start mb-4">
+                            
+                            <span class="text-[8px] font-bold uppercase tracking-widest text-red-500">Umfunktioniert</span>
+                        </div>
+                        <h4 class="font-black text-lg mb-2">@leonardoskr</h4>
+                        <p class="text-xs opacity-50">leonardoskr wurde in einen Account nur für die engsten Freunde umfunktioniert. Alle anderen wurden auf leonardkram verschoben.</p>
+                    </div>
+                    <div class="event-card border-green-500/20">
+                        <div class="flex justify-between items-start mb-4">
+                            
+                            <span class="text-[8px] font-bold uppercase tracking-widest text-green-500">Erstellt</span>
+                        </div>
+                        <h4 class="font-black text-lg mb-2">@leonardkram</h4>
+                        <p class="text-xs opacity-50">Für jeden den ich persönlich kenne.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Year 2024 -->
+            <div class="year-block reveal">
+                <div class="year-label">2024</div>
+                <div class="event-grid">
+                    <div class="event-card">
+                        <div class="flex justify-between items-start mb-4">
+                          
+                            <span class="text-[8px] font-bold uppercase tracking-widest opacity-40">Erstellt</span>
+                        </div>
+                        <h4 class="font-black text-lg mb-2">@onleonardos</h4>
+                        <p class="text-xs opacity-50">Öffentlicher Account erstellt</p>
+                    </div>
+                    <div class="event-card border-red-500/20">
+                        <div class="flex justify-between items-start mb-4">
+                            
+                            <span class="text-[8px] font-bold uppercase tracking-widest text-red-500">Umfunktioniert</span>
+                        </div>
+                        <h4 class="font-black text-lg mb-2">@leonardoskr</h4>
+                        <p class="text-xs opacity-50">Onleonard wurde in ein Account für alle Menschen die ich persönlich kenne umfunktioniert</p>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Year 2023 - Parallel Events -->
+            <div class="year-block reveal">
+                <div class="year-label">2023</div>
+                <div class="event-grid">
+                    <div class="event-card border-red-500/20">
+                        <div class="flex justify-between items-start mb-4">
+                           
+                            <span class="text-[8px] font-bold uppercase tracking-widest text-red-500">Verwahrlost</span>
+                        </div>
+                        <h4 class="font-black text-lg mb-2">@onleonard</h4>
+                        <p class="text-xs opacity-50">leer</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Year 2022 - einzeln-->
+            <div class="year-block reveal">
+                <div class="year-label">2022</div>
+                <div class="event-grid">
+                    <div class="event-card border-red-500/20">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="text-[8px] font-bold uppercase tracking-widest text-red-500">erstellt</span>
+                        </div>
+                        <h4 class="font-black text-lg mb-2">@onleonard</h4>
+                        <p class="text-xs opacity-50">Account erstellt. Jedoch schnell verwahrlost</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-40 px-8 border-t border-current/5 text-center">
+        <h2 class="text-[12vw] font-black uppercase mb-16 opacity-5 select-none">Program- miert! Von mir, Leonard (:</h2>
+        <div class="flex flex-wrap justify-center gap-12 text-[10px] uppercase tracking-[0.5em] font-black opacity-30">
+
+        </div>
+    </footer>
+
+    <script>
+        // Theme Toggle
+        const themeBtn = document.getElementById('theme-toggle');
+        const body = document.body;
+        themeBtn.addEventListener('click', () => {
+            body.classList.toggle('light-mode');
+            const icon = themeBtn.querySelector('i');
+            if(body.classList.contains('light-mode')) {
+                icon.className = 'fas fa-moon text-xs';
+            } else {
+                icon.className = 'fas fa-sun text-xs';
+            }
+        });
+
+        // Scroll Reveal
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 150;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        reveal(); // Init
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if(window.scrollY > 50) {
+                nav.classList.add('glass', 'py-4');
+                nav.classList.remove('py-8');
+            } else {
+                nav.classList.remove('glass', 'py-4');
+                nav.classList.add('py-8');
+            }
+        });
+    </script>
+</body>
+</html>
